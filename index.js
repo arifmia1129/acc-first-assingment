@@ -13,6 +13,23 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rkkub.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+const verifyJWT = (req, res, next) => {
+    const reqAuth = req?.headers?.authorization;
+    if (!reqAuth) {
+        return res.status(401).send({ message: "Unauthorized access" });
+    }
+    const token = reqAuth?.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(403).send({ message: "Forbidden access." })
+        }
+        req.decoded = decoded;
+        next();
+    })
+}
+
+
+
 async function run() {
     try {
         await client.connect();
@@ -43,10 +60,15 @@ async function run() {
             res.send(result);
         })
 
-        app.get("/booking", async (req, res) => {
-            const query = {};
-            const result = await bookingCollection.find(query).toArray();
-            res.send(result);
+        app.get("/booking", verifyJWT, async (req, res) => {
+            const decodedEmail = req?.decoded?.email;
+            const email = req?.query?.email;
+            if (email === decodedEmail) {
+                const query = { user: email };
+                const result = await bookingCollection.find(query).toArray();
+                return res.send(result);
+            }
+            return res.status(401).send({ message: "Unauthorized access" })
         })
         app.post("/booking", async (req, res) => {
             const bookingInfo = req.body;
