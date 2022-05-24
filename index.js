@@ -30,6 +30,17 @@ async function run() {
             const product = await productCollection.findOne(filter);
             res.send(product);
         })
+        app.patch("/product/:id", async (req, res) => {
+            const id = req.params.id;
+            const quantity = req.body;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: quantity,
+            }
+            const result = await productCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
 
 
     }
