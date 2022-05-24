@@ -17,6 +17,7 @@ async function run() {
         await client.connect();
         const productCollection = client.db("ab_group").collection("product");
         const bookingCollection = client.db("ab_group").collection("booking");
+        const userCollection = client.db("ab_group").collection("user");
 
         app.get("/product", async (req, res) => {
             const query = {};
@@ -46,7 +47,17 @@ async function run() {
             const result = await bookingCollection.insertOne(bookingInfo);
             res.send(result);
         })
-
+        app.put("/user", async (req, res) => {
+            const user = req.body;
+            const { email } = user;
+            const filter = { email };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+            }
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
     }
     finally {
 
