@@ -84,6 +84,47 @@ const bookingConfirmEmail = (bookingInfo) => {
         }
     });
 }
+const paymentEmail = (paymentInfo) => {
+    const { 
+        product,
+        orderQuantity,
+        totalPrice,
+        user,
+        tnxId } = paymentInfo;
+    const email = {
+        from: process.env.EMAIL_SENDER,
+        to: user,
+        subject: `Your payment is done for ${product}`,
+        text: `Your payment is done for ${product}`,
+        html:
+            `
+        <div>
+                <h2>Assalamu Alaikum Dear Sir/Mam,</h2>,
+                <h1>We have receive your payment.</h1>
+                <h3>Your order details is :</h3>
+                <ul>
+                    <li>Order for: ${product}</li>
+                    <li>Order quantity: ${orderQuantity}</li>
+                    <li>Total price: ${totalPrice}</li>
+                </ul>
+                <p>Thank you for you payment. Now we are working for your order.</p>
+                <h2>Stay with us!</h2>
+                <br />
+                <br />
+                <h1>A&B Group of Industries Ltd.</h1>
+            </div>
+        `
+    };
+
+    emailSenderClient.sendMail(email, function (err, info) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('Message sent: ', info);
+        }
+    });
+}
 
 
 
@@ -164,11 +205,11 @@ async function run() {
         })
         app.put("/booking/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
-            const status = req.body;
+            const info = req.body;
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updateDoc = {
-                $set: status,
+                $set: info,
             }
             const result = await bookingCollection.updateOne(filter, updateDoc, options);
             res.send(result);
@@ -187,6 +228,13 @@ async function run() {
                 expiresIn: "1d"
             })
             res.send({ result, token });
+        })
+
+        app.post("/payment", async (req, res) => {
+            const paymentInfo = req.body;
+            const result = await paymentCollection.insertOne(paymentInfo);
+            paymentEmail(paymentInfo);
+            res.send(result);
         })
     }
     finally {
