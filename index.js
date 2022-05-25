@@ -85,7 +85,7 @@ const bookingConfirmEmail = (bookingInfo) => {
     });
 }
 const paymentEmail = (paymentInfo) => {
-    const { 
+    const {
         product,
         orderQuantity,
         totalPrice,
@@ -135,6 +135,7 @@ async function run() {
         const bookingCollection = client.db("ab_group").collection("booking");
         const userCollection = client.db("ab_group").collection("user");
         const paymentCollection = client.db("ab_group").collection("payment");
+        const reviewCollection = client.db("ab_group").collection("review");
 
         app.post("/create-payment-intent", async (req, res) => {
             const { price } = req.body;
@@ -234,6 +235,17 @@ async function run() {
             const paymentInfo = req.body;
             const result = await paymentCollection.insertOne(paymentInfo);
             paymentEmail(paymentInfo);
+            res.send(result);
+        })
+        app.post("/review", async (req, res) => {
+            const reviewInfo = req.body;
+            const result = await reviewCollection.insertOne(reviewInfo);
+            res.send(result);
+        })
+
+        app.get("/review", verifyJWT, async (req, res) => {
+            const query = {};
+            const result = await reviewCollection.find(query).toArray();
             res.send(result);
         })
     }
