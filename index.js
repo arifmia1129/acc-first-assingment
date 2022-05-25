@@ -230,7 +230,12 @@ async function run() {
             })
             res.send({ result, token });
         })
-
+        app.get("/user/:email", verifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const result = await userCollection.findOne(query);
+            res.send(result);
+        })
         app.post("/payment", async (req, res) => {
             const paymentInfo = req.body;
             const result = await paymentCollection.insertOne(paymentInfo);
