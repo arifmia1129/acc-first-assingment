@@ -4,6 +4,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
+const stripe = require("stripe")(process.env.PAYMENT_KEY);
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
@@ -92,6 +93,23 @@ async function run() {
         const productCollection = client.db("ab_group").collection("product");
         const bookingCollection = client.db("ab_group").collection("booking");
         const userCollection = client.db("ab_group").collection("user");
+        const paymentCollection = client.db("ab_group").collection("payment");
+
+        app.post("/create-payment-intent", async (req, res) => {
+            const { price } = req.body;
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: price * 100,
+                currency: "usd",
+                payment_method_types: [
+                    "card"
+                ],
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
 
         app.get("/product", async (req, res) => {
             const query = {};
@@ -103,7 +121,6 @@ async function run() {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const product = await productCollection.findOne(filter);
-            console.log(product);
             res.send(product);
         })
         app.patch("/product/:id", async (req, res) => {
@@ -145,6 +162,18 @@ async function run() {
             const result = await bookingCollection.deleteOne(query);
             res.send(result);
         })
+        app.put("/booking/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const status = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: status,
+            }
+            const result = await bookingCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
+
         app.put("/user", async (req, res) => {
             const user = req.body;
             const { email } = user;
