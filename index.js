@@ -33,26 +33,26 @@ const verifyJWT = (req, res, next) => {
 
 const options = {
     auth: {
-      api_key: process.env.EMAIL_API
+        api_key: process.env.EMAIL_API
     }
-  }
+}
 const emailSenderClient = nodemailer.createTransport(sgTransport(options));
 
 const bookingConfirmEmail = (bookingInfo) => {
-    const {productId,
+    const { productId,
         product,
         orderQuantity,
         totalPrice,
         user,
         phone,
-        address} = bookingInfo;
+        address } = bookingInfo;
     const email = {
         from: process.env.EMAIL_SENDER,
         to: user,
         subject: `Your order booked for ${product}`,
         text: `Your order booked for ${product}`,
-        html: 
-        `
+        html:
+            `
         <div>
                 <h2>Assalamu Alaikum Dear Sir/Mam,</h2>,
                 <h1>We have receive your order.</h1>
@@ -72,16 +72,16 @@ const bookingConfirmEmail = (bookingInfo) => {
                 <h1>A&B Group of Industries Ltd.</h1>
             </div>
         `
-      };
-      
-      emailSenderClient.sendMail(email, function(err, info){
-          if (err ){
+    };
+
+    emailSenderClient.sendMail(email, function (err, info) {
+        if (err) {
             console.log(err);
-          }
-          else {
+        }
+        else {
             console.log('Message sent: ', info);
-          }
-      });
+        }
+    });
 }
 
 
@@ -103,6 +103,7 @@ async function run() {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const product = await productCollection.findOne(filter);
+            console.log(product);
             res.send(product);
         })
         app.patch("/product/:id", async (req, res) => {
@@ -125,6 +126,12 @@ async function run() {
                 return res.send(result);
             }
             return res.status(401).send({ message: "Unauthorized access" })
+        })
+        app.get("/booking/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.findOne(query);
+            return res.send(result);
         })
         app.post("/booking", async (req, res) => {
             const bookingInfo = req.body;
