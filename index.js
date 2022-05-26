@@ -275,7 +275,7 @@ async function run() {
             const email = req.params.email;
             const query = { email };
             const user = await userCollection.findOne(query);
-            const isAdmin = user.role === "admin";
+            const isAdmin = user?.role === "admin";
             res.send({ isAdmin });
         })
         app.get("/user", verifyJWT, verifyAdmin, async (req, res) => {
