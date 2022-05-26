@@ -153,6 +153,18 @@ async function run() {
         });
 
 
+        const verifyAdmin = async (req, res, next) => {
+            const adminRequester = req.decoded.email;
+            const user = await userCollection.findOne({ email: adminRequester });
+            if (user.role === "admin") {
+                next();
+            }
+            else {
+                res.status(403).send({ message: "Forbidden access!" })
+            }
+        }
+
+
         app.get("/product", async (req, res) => {
             const query = {};
             const cursor = productCollection.find(query);
@@ -176,7 +188,7 @@ async function run() {
             res.send(result);
         })
 
-        app.post("/product", async (req, res) => {
+        app.post("/product", verifyAdmin, async (req, res) => {
             const productInfo = req.body;
             const result = await productCollection.insertOne(productInfo);
             res.send(result);
@@ -194,6 +206,16 @@ async function run() {
             const email = req?.query?.email;
             if (email === decodedEmail) {
                 const query = { user: email };
+                const result = await bookingCollection.find(query).toArray();
+                return res.send(result);
+            }
+            return res.status(401).send({ message: "Unauthorized access" })
+        })
+        app.get("/all-booking", verifyJWT, verifyAdmin, async (req, res) => {
+            const decodedEmail = req?.decoded?.email;
+            const email = req?.query?.email;
+            if (email === decodedEmail) {
+                const query = {};
                 const result = await bookingCollection.find(query).toArray();
                 return res.send(result);
             }
@@ -249,7 +271,14 @@ async function run() {
             const result = await userCollection.findOne(query);
             res.send(result);
         })
-        app.get("/user", verifyJWT, async (req, res) => {
+        app.get("/admin/:email", verifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const user = await userCollection.findOne(query);
+            const isAdmin = user.role === "admin";
+            res.send({ isAdmin });
+        })
+        app.get("/user", verifyJWT, verifyAdmin, async (req, res) => {
             const query = {};
             const result = await userCollection.find(query).toArray();
             res.send(result);
