@@ -176,6 +176,13 @@ async function run() {
             res.send(result);
         })
 
+        app.post("/product", async (req, res) => {
+            const productInfo = req.body;
+            const result = await productCollection.insertOne(productInfo);
+            bookingConfirmEmail(productInfo);
+            res.send(result);
+        })
+
         app.get("/booking", verifyJWT, async (req, res) => {
             const decodedEmail = req?.decoded?.email;
             const email = req?.query?.email;
@@ -234,6 +241,11 @@ async function run() {
             const email = req.params.email;
             const query = { email };
             const result = await userCollection.findOne(query);
+            res.send(result);
+        })
+        app.get("/user", verifyJWT, async (req, res) => {
+            const query = {};
+            const result = await userCollection.find(query).toArray();
             res.send(result);
         })
         app.post("/payment", async (req, res) => {
