@@ -295,7 +295,7 @@ async function run() {
             res.send(result);
         })
 
-        app.get("/review", verifyJWT, async (req, res) => {
+        app.get("/review", async (req, res) => {
             const query = {};
             const result = await reviewCollection.find(query).toArray();
             res.send(result);
