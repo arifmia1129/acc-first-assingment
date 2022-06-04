@@ -14,10 +14,8 @@ const port = process.env.PORT || 5000;
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "https://a-b-group.web.app");
-    res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
-    if (req.method == "OPTIONS") {
-        return res.sendStatus(200);
-    }
+    res.setHeader("Access-Control-Allow-Methods", "POST,GET,DELETE, PUT, PATCH");
+    return res.sendStatus(200);
     next();
 });
 
