@@ -11,12 +11,22 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 
-const corsOptions = {
-    origin: "https://a-b-group.web.app",
-    optionsSuccessStatus: 200
-}
-app.use(cors(corsOptions));
-// app.use(cors({ origin: 'http://localhost:3000' }))
+
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "https://a-b-group.web.app");
+    res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
+    if (req.method == "OPTIONS") {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
+// const corsOptions = {
+//     origin: "https://a-b-group.web.app",
+//     optionsSuccessStatus: 200
+// }
+// app.use(cors(corsOptions));
+// // app.use(cors({ origin: 'http://localhost:3000' }))
 app.use(express.json());
 
 
