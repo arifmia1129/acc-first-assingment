@@ -10,6 +10,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, X-Auto-Token, Origin, Authorization");
+
+
 app.use(cors({
     origin: 'https://a-b-group.web.app'
 }));
