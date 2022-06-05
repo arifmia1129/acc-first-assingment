@@ -16,7 +16,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-header("Access-Control-Allow-Origin: https://a-b-group.web.app");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, X-Auto-Token, Origin, Authorization");
 
