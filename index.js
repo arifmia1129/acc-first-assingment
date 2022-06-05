@@ -16,9 +16,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, X-Auto-Token, Origin, Authorization");
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rkkub.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
