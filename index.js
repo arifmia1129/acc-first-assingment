@@ -9,8 +9,9 @@ const stripe = require("stripe")(process.env.PAYMENT_KEY);
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
+
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: 'https://a-b-group.web.app'
 }));
 app.use(express.json());
 
