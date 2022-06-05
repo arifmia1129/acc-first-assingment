@@ -11,16 +11,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 
-
-
 app.use(cors({
     origin: "https://a-b-group.web.app"
 }));
 app.use(express.json());
-
-header("Access-Control-Allow-Origin: https://a-b-group.web.app");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, X-Auto-Token, Origin, Authorization");
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rkkub.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
