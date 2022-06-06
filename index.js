@@ -10,15 +10,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 
-app.use(cors({
-    origin: 'https://a-b-group.web.app'
-}));
+// app.use(cors({
+//     origin: 'https://a-b-group.web.app'
+// }));
+app.use(cors());
 app.use(express.json());
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://a-b-group.web.app");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rkkub.mongodb.net/?retryWrites=true&w=majority`;
@@ -143,13 +139,6 @@ async function run() {
         const userCollection = client.db("ab_group").collection("user");
         const paymentCollection = client.db("ab_group").collection("payment");
         const reviewCollection = client.db("ab_group").collection("review");
-
-        app.all('*', function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "X-Requested-With");
-            res.header('Access-Control-Allow-Headers', 'Content-Type');
-            next();
-        });
 
         app.post("/create-payment-intent", async (req, res) => {
             const { price } = req.body;
