@@ -13,7 +13,6 @@ const port = process.env.PORT || 5000;
 app.use(cors({
     origin: 'https://a-b-group.web.app'
 }));
-app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rkkub.mongodb.net/?retryWrites=true&w=majority`;
