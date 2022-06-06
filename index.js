@@ -14,7 +14,11 @@ app.use(cors({
     origin: 'https://a-b-group.web.app'
 }));
 app.use(express.json());
-
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "https://a-b-group.web.app");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rkkub.mongodb.net/?retryWrites=true&w=majority`;
@@ -191,7 +195,6 @@ async function run() {
         })
 
         app.post("/product", verifyAdmin, async (req, res) => {
-            res.set('Access-Control-Allow-Origin', 'https://a-b-group.web.app');
             const productInfo = req.body;
             const result = await productCollection.insertOne(productInfo);
             res.send(result);
