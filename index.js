@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
 const stripe = require("stripe")(process.env.PAYMENT_KEY);
-
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -168,7 +167,6 @@ async function run() {
             }
         }
 
-
         app.get("/product", async (req, res) => {
             const query = {};
             const cursor = productCollection.find(query);
@@ -193,6 +191,7 @@ async function run() {
         })
 
         app.post("/product", verifyAdmin, async (req, res) => {
+            res.set('Access-Control-Allow-Origin', 'https://a-b-group.web.app');
             const productInfo = req.body;
             const result = await productCollection.insertOne(productInfo);
             res.send(result);
