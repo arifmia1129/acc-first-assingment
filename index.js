@@ -144,6 +144,13 @@ async function run() {
         const paymentCollection = client.db("ab_group").collection("payment");
         const reviewCollection = client.db("ab_group").collection("review");
 
+        app.all('*', function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+            next();
+        });
+
         app.post("/create-payment-intent", async (req, res) => {
             const { price } = req.body;
             const paymentIntent = await stripe.paymentIntents.create({
