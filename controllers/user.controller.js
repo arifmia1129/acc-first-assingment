@@ -42,7 +42,6 @@ module.exports.updateUser = (req, res) => {
     const { id } = req.params;
     const data = req.body;
     const update = Object.keys(data)[0];
-    console.log(update);
     if (isNaN(id) === true) {
         res.send("Sorry id should be number not string!")
     }
@@ -51,7 +50,7 @@ module.exports.updateUser = (req, res) => {
             res.send("Sorry! Id should be less than 5.")
         }
         else {
-            const user = users.find(user => user.Id == Number(id));
+            const user = users.find(user => user.Id === Number(id));
             if (!user[`${update}`]) {
                 res.send("Property name not matched with our server!")
             }
@@ -61,4 +60,33 @@ module.exports.updateUser = (req, res) => {
             }
         }
     }
+}
+module.exports.bulkUpdateUser = (req, res) => {
+    const data = req.body;
+
+    for (let i = 0; i < data.length; i++) {
+        const singleData = data[i];
+        const Id = Object.keys(singleData)[0];
+        const Info = Object.keys(singleData)[1];
+        const id = singleData.Id;
+        if (!Id || !Info) {
+            res.send("Sorry your sending data is not valid! Demo data example: [{id:1, contact:'01849676331'}, {id:2, name:'AB Arif'}] ")
+        }
+        else {
+            if (id > 5) {
+                res.send("Sorry! Id should be less than 5.")
+            }
+            else {
+                const user = users.find(user => user.Id === Number(id));
+                if (!user[`${Info}`]) {
+                    res.send("Property name not matched with our server!")
+                }
+                else {
+                    user[`${Info}`] = singleData[`${Info}`];
+                }
+            }
+        }
+    }
+    res.send(users);
+
 }
