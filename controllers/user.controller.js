@@ -37,3 +37,28 @@ module.exports.saveUser = (req, res) => {
     }
 
 }
+
+module.exports.updateUser = (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    const update = Object.keys(data)[0];
+    console.log(update);
+    if (isNaN(id) === true) {
+        res.send("Sorry id should be number not string!")
+    }
+    else {
+        if (id > 5) {
+            res.send("Sorry! Id should be less than 5.")
+        }
+        else {
+            const user = users.find(user => user.Id == Number(id));
+            if (!user[`${update}`]) {
+                res.send("Property name not matched with our server!")
+            }
+            else {
+                user[`${update}`] = data[`${update}`];
+                res.send(users);
+            }
+        }
+    }
+}
