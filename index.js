@@ -4,6 +4,7 @@ const dbConnect = require("./utils/dbConnect");
 const app = express();
 const port = process.env.PORT || 5000;
 const productRoutes = require("./routers/v1/product.route.js");
+const userRoutes = require("./routers/v1/user.route.js");
 const viewCount = require("./middleware/viewCount");
 
 app.use(cors({
@@ -19,6 +20,7 @@ app.set("view engine", "ejs");
 dbConnect();
 
 app.use("/api/v1/product", productRoutes);
+app.use("/user", userRoutes);
 
 
 app.get("/", (req, res) => {

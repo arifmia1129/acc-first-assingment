@@ -1,0 +1,42 @@
+[
+    {
+        "Id": 1,
+        "gender": "male",
+        "name": "Arif",
+        "contact": "01849676331",
+        "address": "Bogra",
+        "photoUrl": "https://i.ibb.co/1JryQ95/doctor-5.jpg"
+    },
+    {
+        "Id": 2,
+        "gender": "female",
+        "name": "Binu",
+        "contact": "01849676331",
+        "address": "Dhaka",
+        "photoUrl": "https://i.ibb.co/1JryQ95/doctor-5.jpg"
+    },
+    {
+        "Id": 3,
+        "gender": "male",
+        "name": "Shahin",
+        "contact": "01849676331",
+        "address": "Gaibandha",
+        "photoUrl": "https://i.ibb.co/1JryQ95/doctor-5.jpg"
+    },
+    {
+        "Id": 4,
+        "gender": "male",
+        "name": "Shuvo",
+        "contact": "01849676331",
+        "address": "Dinajpur",
+        "photoUrl": "https://i.ibb.co/1JryQ95/doctor-5.jpg"
+    },
+    {
+        "Id": 5,
+        "gender": "male",
+        "name": "Naim",
+        "contact": "01849676331",
+        "address": "Rangpur",
+        "photoUrl": "https://i.ibb.co/1JryQ95/doctor-5.jpg"
+    }
+]
