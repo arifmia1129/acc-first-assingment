@@ -63,13 +63,12 @@ module.exports.updateUser = (req, res) => {
 }
 module.exports.bulkUpdateUser = (req, res) => {
     const data = req.body;
-
     for (let i = 0; i < data.length; i++) {
         const singleData = data[i];
         const Id = Object.keys(singleData)[0];
         const Info = Object.keys(singleData)[1];
         const id = singleData.Id;
-        if (!Id || !Info) {
+        if (!Id || !Info || !id) {
             res.send("Sorry your sending data is not valid! Demo data example: [{id:1, contact:'01849676331'}, {id:2, name:'AB Arif'}] ")
         }
         else {
@@ -78,6 +77,7 @@ module.exports.bulkUpdateUser = (req, res) => {
             }
             else {
                 const user = users.find(user => user.Id === Number(id));
+                console.log(user);
                 if (!user[`${Info}`]) {
                     res.send("Property name not matched with our server!")
                 }
@@ -88,5 +88,17 @@ module.exports.bulkUpdateUser = (req, res) => {
         }
     }
     res.send(users);
+
+}
+
+module.exports.deleteUser = (req, res) => {
+    const { id } = req.params;
+    if (isNaN(id) === true) {
+        res.send("Sorry id should be number not string!")
+    }
+    else {
+        const otherUsers = users.filter(user => user.Id !== Number(id));
+        res.send(otherUsers);
+    }
 
 }
