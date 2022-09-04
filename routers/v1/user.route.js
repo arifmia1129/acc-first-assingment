@@ -1,15 +1,10 @@
 const express = require("express");
-const axios = require('axios');
 
 const router = express.Router();
-const users = require("../../user.json");
+const userController = require("../../controllers/user.controller");
 
-router.get("/random", async (req, res) => {
-    const number = Math.random() * 5;
-    const id = Math.ceil(number);
-    const user = users.find(user => user.Id === id);
-    res.send(user)
-})
+router.get("/random", userController.randomUser);
+router.get("/all", userController.allUser);
 
 
 module.exports = router;
